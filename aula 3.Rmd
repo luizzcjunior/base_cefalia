@@ -1,0 +1,52 @@
+---
+title: "Aula 3"
+author: "Luiz Carlos Junior"
+date: "2023-08-25"
+output: html_document
+---
+
+# aula 4
+importação de base de dados e pré-visualização
+```{r}
+#read.csv("base microcefalia.csv")
+
+#caso use Windows, para reconhecer caracteres especiais, acentos, cedilhas, etc = ("base microcefalia.csv", fileEncoding="utf8")
+
+#importação da base de dados
+cefalia<-read.csv("base microcefalia.csv")
+
+#exibir o nome das variáveis das colunas
+names(cefalia)
+
+#exibir as primeiras 10 linhas seguidas das 10 últimas linhas
+head(cefalia, 10)
+tail(cefalia, 10)
+```
+
+Instalando nosso primeiro pacote
+```{r}
+#install.packages("dplyr")
+#para ativar pacotes
+library(dplyr)
+glimpse(cefalia)
+```
+
+Mudar a coluna de crianças com microcefalia para numérica, e exiba o total de crianças com microcefalia no RJ em 2016
+```{r echo=FALSE, message=FALSE}
+#install.packages("stringr")
+library(stringr)
+
+#substituindo hífen por zero
+cefalia$Criança.com.microcef.e.ou.altera.SNC....28.dias. <-
+str_replace_all(cefalia$Criança.com.microcef.e.ou.altera.SNC....28.dias., "-", "0")
+
+#excluir a última linha
+cefalia <- cefalia [-93,]
+
+#finalmente mudando para numérico
+cefalia$Criança.com.microcef.e.ou.altera.SNC....28.dias. <- as.numeric(cefalia$Criança.com.microcef.e.ou.altera.SNC....28.dias.)
+
+#somando os valores
+sum(cefalia$Criança.com.microcef.e.ou.altera.SNC....28.dias.)
+```
+

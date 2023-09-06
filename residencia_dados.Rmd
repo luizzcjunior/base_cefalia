@@ -1,0 +1,146 @@
+---
+title: "residencia dados"
+author: "poli"
+date: '2023-08-14'
+output: html_document
+---
+Sempre antes de começar é preciso indicar o local de trabalho pro R. Crie sempre uma pasta pra cada projeto, indicamos dentro de documentos, criar uma pasta "residencia_dados" para que todos usemos os mesmos nomes e caminhos. Então digite "ctrl + shift + h" e selecione a pasta da residência. A partir de agora tudo ficará na pasta de documentos, bem como todos os arquivos que você decidir importar também precisam estar nesta pasta.
+
+Para abrir um chunk basta digitar ctrl+alt+i e ctrl+shif+k pra exibir em um html
+```{r}
+#Dentro do chunk os textos e comentários precisam ser antecedidos por hashtag
+#primeira opção será uma soma 2+2
+2+2
+```
+Alt+tab volta pra aba de programação do R, abre um novo chunk
+```{r}
+#subtraia 4-2
+4-2
+#as demais operações são feitas como a seguir:
+#divisão: /
+#multiplicação: *
+#exponenciar: ^
+#raiz quadrada: sqrt()
+```
+Primeiro problema matemático: 100-88 depois o resultado disso dividido por 2
+```{r}
+(100-88)/2
+```
+Pergunta: para onde foi o só o resultado de 100-8?
+Podemos alocar esse resultado na memória ou em um objeto
+```{r}
+#para atribuir use o comando alt+-
+#pra executar um comando: ctrl+enter
+a <- 100-88
+b <- a/2
+b
+```
+Problema lógico: para começar a residência nós precisávamos de pelo menos 6 computadores. Sendo que 1 computador leva 12 horas para ficar pronto e disponível no data_labe. Se a gente começou a preparar os computadores no final da última aula, quantos computadores a gente teria disponível até o início da próxima aula? Leve em consideração que a última aula acabou às 17:30 do dia 09/08 e a próxima aula se iniciaria às 15:00 do dia 11/08
+```{r}
+dia1 <- 17.5-24
+dia2 <- 24
+dia3 <- 0-15
+dia1 <- dia1*-1
+dia3 <- dia3*-1
+tthrs <- dia1+dia2+dia3
+ttcomp <- tthrs/12
+```
+Primeira resposta lógica. Se o total de computadores for maior que 6 nós teremos a quantidade adequada 
+```{r}
+if (ttcomp>=6) {
+  res <- "Teremos todos os computadores"
+} else {
+  res <- "Não teremos todos os computadores"
+}
+print(res)
+```
+ctrl + s pra salvar
+<br> <br>
+Assim como no desafio lógico a gente utilizou os símbolos de maior que (>) e igual (=), existem ainda outros exemplos: <br>
+- & (significa AND) <br>
+- | (siginifica OR) <br>
+- == (significa idêntico) <br>
+- != (siginifica diferente) <br>
+- > (maior que) <br>
+- < (menor que) <br>
+- >= (maior ou igual) <br>
+- <= (menor ou igual) <br>
+Além disso, alguns sinais serão utilizados para facilitar a leitura no nosso documento:
+A gente usa  dois asteriscos pra deixar as coisas em **negrito**
+Usamos um asterisco pra deixar em *itálico* e o br serve para quebra de linha <br>
+
+Para darmos títulos e subtítulos usamos as hashtags fora dos chunks. Se quisermos dar um título, usamos apenas uma e os subtítulos usamos duas:
+
+## Importar base de dados
+Para importar uma base de dados, primeiro precisamos indicar o caminho aonde estão nossos documentos [passo já realizado no início]. Na sua pasta de documentos coloque as duas bases de dados que iremos utilizar que estão no drive: <br>
+- A base zika <br>
+- A base microcefalia <br>
+
+Passo 1) Para ler a base de dados utilizamos o comando "read.csv" e seus parâmetros. Importe a base de dados sobre microcefalia:
+```{r}
+#para ler e importar SEMPRE
+## aloque em um objeto
+cefalia <- read.csv("base microcefalia.csv")
+#para termos um resumo da base podemos usar o comando summary (do próprio R)
+summary(cefalia)
+#tanto no source como no console serão exibidos as informações gerais sobre cada variável e seu conteúdo. Por que a variável cod_ibge6 aparece diferente de todas as outras? 
+head(cefalia, 5)
+tail(cefalia, 5)
+```
+Agora iremos usar a ajuda de um pacote para auxiliar em muitas tarefas. Instale o pacote dplyr
+```{r}
+#para instalar basta usar o comando "install.packages e entre parênteses e aspas o nome do pacote
+install.packages("dplyr")
+#depois de instalar UMA VEZ não precisa mais rodar esse comando e sim ativar o pacote SEMPRE que for usar o R com o comando library e o nome do pacote entre parênteses sem as aspas
+library(dplyr)
+#agora podemos usar o comando 'glimpse' que talvez seja um dos melhores para resumir
+glimpse(cefalia)
+```
+Por fim, para visualizar de forma mais comum podemos usar o comando View()
+```{r}
+View(cefalia)
+```
+Quais são as percepções que você tem sobre essa base de dados? Se ela tem todos as informações já resumidas por cada município? <br>
+Agora iremos usar o mesmo comando para carregar outra base de dados, fique atento para o tempo e quantidade:
+```{r}
+zika <- read.csv("base zika.csv")
+summary(zika)
+head(zika, 5)
+tail(zika, 5)
+glimpse(zika)
+View(zika)
+```
+Agora que temos duas bases de dados, quais seriam as possiveis diferenças entre elas?
+
+## Primeiro resultado
+Desafio de calcular o total de casos em cada base. <br>
+Primeiro é preciso entender qual variável ou coluna teria o total de casos para poder somarmos todos os registros dele. 
+Para exibir os nomes das variáveis podemos utilizar o comando "names". Para a base de microcefalia temos:
+```{r}
+names(cefalia)
+```
+A variável 62 indica a classificação do caso final. Podemos exibir o conjunto dessas informações exibindo o conteúdo dela:
+```{r}
+cefalia$Classificação.final.do.caso_Confirmado
+```
+Com o comando acima estamos vendo todas as informações contendo as 93 informações, aonde podemos perceber que as informações variam entre hífen, 1, 2, 131 e sucessivamente. Como é possível uma mesma variável ter diferentes tipos de informação? (linguagem). Qual seria o processo melhor pra somar tudo? É possível somar números com hífens? Que outros processos precisaríamos fazer para poder somar:
+```{r}
+sum(as.numeric(cefalia$Classificação.final.do.caso_Confirmado), na.rm = T)
+```
+O comando acima, de forma arbitrária está usando a função SUM, a variável que estamos querendo somar, mas forçando a tratá-la como um número e não contabilizar qualquer informação ausente (NA).<br>
+Na tentativa de realizar o mesmo com a base de zika, primeiro precisamos identificar qual melhor variável possui essa informação
+```{r}
+names(zika)
+```
+Aparentemente a variável classi_fin parece também conter os casos, podemos exibir o conteúdo da mesma forma
+```{r}
+head(zika$CLASSI_FIN,50)
+```
+Vejam que nela eu não tenho hífens, mas tenho também números e letras "NA" poderíamos usar o mesmo comando?
+```{r}
+sum(as.numeric(zika$CLASSI_FIN), na.rm = T)
+```
+Aqui a informação é extremamente superior à passada. Por quê?
+
+
+

@@ -1,0 +1,34 @@
+---
+title: "aula 2"
+author: "Luiz Carlos Junior"
+date: "2023-08-16"
+output: html_document
+---
+
+Fala, cria! <BR> SRN!!
+```{r}
+#chunk: lugar dentro do arquivo R Markdown onde você deve escrever/usar a linguagem R 
+
+resultadosubtração <- 100-88
+resultadosubtração
+resultadodivisão <- resultadosubtração/2
+resultadodivisão
+```
+
+```{r}
+#Problema lógico: para começar a residência, nós precisávamos de pelo menos 6 computadores. Sendo que 1 computador leva 12 horas para ficar pronto e disponível no data_labe e só se pode preparar 1 computador por vez. Se a gente começou a preparar os computadores no final da última aula, quantos computadores a gente teria disponível até o início da próxima aula? Leve em consideração que a última aula acabou às 17:30 do dia 09/08 e a próxima aula se iniciaria às 15:00 do dia 11/08.
+
+resultadodia1 <- 24-17.5
+resultadodia1
+resultadodia2 <- 24-0
+resultadodia2
+resultadodia3 <- 15-0
+resultadodia3
+somadosdias <- resultadodia1+resultadodia2+resultadodia3
+somadosdias
+contafinal <- somadosdias/12
+contafinal
+```
+
+
+

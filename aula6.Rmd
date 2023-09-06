@@ -1,0 +1,111 @@
+---
+title: "aula 6"
+author: "poli"
+date: '2023-08-25'
+output: html_document
+---
+
+# Aula 4 (histórico)
+
+## Prática
+Lembre de sempre carregar as bibliotecas que você precisará e setar o diretório de trabalho.
+
+```{r echo=FALSE, message=FALSE}
+library(dplyr)
+library(stringr)
+
+#no caso do pc do POlinho o local é: 
+setwd("~/Documentos/R/Residência Dados Luiz")
+```
+
+Importando a base de dados (da síndrome congênita) e pré-visualizando
+```{r}
+basesc <- read.csv("base microcefalia.csv")
+# summary(zika)
+#head(basesc, 5)
+#tail(basesc, 5)
+glimpse(basesc)
+#View(basesc)
+```
+
+## Primeiro resultado
+Desafio de calcular o total de casos. <br>
+Primeiro é preciso entender qual variável ou coluna teria o total de casos para poder somarmos todos os registros dele. 
+Para exibir os nomes das variáveis podemos utilizar o comando "names". Para a base de microcefalia temos:
+```{r echo=FALSE, message=FALSE}
+names(basesc)
+```
+A variável 62 indica a classificação do caso final. Podemos exibir o conjunto dessas informações exibindo o conteúdo dela:
+```{r}
+basesc$Classificação.final.do.caso_Confirmado
+```
+Com o comando acima estamos vendo todas as informações contendo as 93 informações, aonde podemos perceber que as informações variam entre hífen, 1, 2, 131 e sucessivamente. Como é possível uma mesma variável ter diferentes tipos de informação? (linguagem). Qual seria o processo melhor pra somar tudo? É possível somar números com hífens? Que outros processos precisaríamos fazer para poder somar:
+```{r}
+sum(as.numeric(basesc$Classificação.final.do.caso_Confirmado), na.rm = T)
+```
+O comando acima, de forma arbitrária está usando a função SUM, a variável que estamos querendo somar, mas forçando a tratá-la como um número e não contabilizar qualquer informação ausente (NA).<br>
+
+## Mudança do tipo de dados
+```{r}
+# precisamos mudar o formato para que a variável seja entendida como numérica, 
+# porém hífen não é número é um símbolo representando que precisamos então dar
+# o valor apropriado
+
+basesc$Classificação.final.do.caso_Confirmado <- str_replace_all(basesc$Classificação.final.do.caso_Confirmado, "-", "0")
+
+#agora sem o hífen podemos de fato mudar a variável pro tipo numérico
+basesc$Classificação.final.do.caso_Confirmado <- as.numeric(basesc$Classificação.final.do.caso_Confirmado)
+
+#por fim, podemos repetir o mesmo comando de soma sem precisar de tantos atributos
+sum(basesc$Classificação.final.do.caso_Confirmado)
+```
+**No ano de 2016 o estado do Rio de Janeiro teve 227 casos confirmados de síndrome congênita**
+
+# Aula 6
+Hoje aprenderemos a agregar uma série de variáveis, operações por grupos e juntar bases.
+
+
+## Exercício
+Qual o total de casos prováveis para o mesmo período e território?
+i) Modifique os hifens por zero
+ii) Transforme a variável para formato numérico
+iii) Realize a soma
+
+```{r}
+names(basesc)
+
+basesc$Classificação.final.do.caso_Provável <- str_replace_all(basesc$Classificação.final.do.caso_Provável, "-", "0")
+
+basesc$Classificação.final.do.caso_Provável <- as.numeric(basesc$Classificação.final.do.caso_Provável)
+
+sum(basesc$Classificação.final.do.caso_Provável)
+```
+
+
+
+
+
+
+
+Ao invés de fazermos uma soma por vez, podemos realizar várias ao mesmo tempo com a ajuda do dplyr
+```{r}
+#exibindo a soma dos casos confirmados e provaveis
+
+basesc %>% summarise(casos_confirmados=sum(Classificação.final.do.caso_Confirmado), casos_provaveis=sum(Classificação.final.do.caso_Provável))
+```
+
+Vamos retirar todos os hífens da tabela por zero e depois transformar as colunas que são numéricas pra formato numérico
+```{r}
+basesc[basesc == "-"] <- "0"
+
+#mudando as variaveis numericas para numéricas
+
+ basesc <- basesc %>% mutate_at(c(3:67), as.numeric)
+```
+
+Agora podemos exibir todo o somatório de casos do ERJ_2016.
+O resumo dos casos e suas classificações finais podem ser visto abaixo:
+
+```{r}
+basesc %>% summarise(sum(Recém.nascido.com.microcefalia.....28.dias., na.rm = T), sum(Criança.com.microcef.e.ou.altera.SNC....28.dias., na.rm = T), sum(Feto.com.alterações.do.SNC, na.rm = T))
+```
